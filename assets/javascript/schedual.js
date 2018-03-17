@@ -1,5 +1,5 @@
 //initialize firebase
-var config = {
+  var config = {
     apiKey: "AIzaSyC7mP2LgT0usXVe8h6XcjNfmw2F1udyDI4",
     authDomain: "trains-30fc5.firebaseapp.com",
     databaseURL: "https://trains-30fc5.firebaseio.com",
@@ -8,6 +8,8 @@ var config = {
     messagingSenderId: "1048033303126"
   };
   firebase.initializeApp(config);
+
+  var database = firebase.database();
 
 //button for adding trains
 $("#add-train-btn").on("click", function(event) {
@@ -31,10 +33,10 @@ var newTrain = {
 database.ref().push(newTrain);
 
 //log to console
-console.log(trainEmp.name);
-console.log(trainEmp.destination);
-console.log(trainEmp.time);
-console.log(trainEmp.frequency);
+console.log(train.name);
+console.log(train.destination);
+console.log(train.time);
+console.log(train.frequency);
 
   // Alert
   alert("Train successfully added");
@@ -46,35 +48,38 @@ console.log(trainEmp.frequency);
   $("#frequency-input").val("");
 });
 
-
-//Create Firebase event 
 database.ref().on("child_added", function(childSnapshot, prevChildKey) {
 
   console.log(childSnapshot.val());
 
-// Store everything into a variable.
-var trainName = childSnapshot.val().name;
-var trainDestination = childSnapshot.val().destination;
-var trainTime = childSnapshot.val().time;
-var trainFrequency = childSnapshot.val().frequency;
+  // Store everything into a variable.
+  var trainName = childSnapshot.val().name;
+  var trainDestination = childSnapshot.val().destination;
+  var trainTime = childSnapshot.val().time;
+  var trainFrequency = childSnapshot.val().frequency;
 
-// Train Info
-console.log(trainempName);
-console.log(trainDestination);
-console.log(trainTime);
-console.log(trainFrequency);
+  // Train Info
+  console.log(trainName);
+  console.log(trainDestination);
+  console.log(trainTime);
+  console.log(trainFrequency);
 
-// Prettify
-var trainStartPretty = moment.unix(trainStart).format("HH:mm");
+  // Current Time ????????????????????
+  var currentTime = moment();
+  console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
+
+  // To calculate the next arrival ????????????????
+  var nextArrival = trainTime + trainFrequency
+  console.log(nextArrival);
+
+  // Calculate Minutes Away ????????????????????????
+  var minutesAway = currentTime - nextArrival
+  console.log(minutesAway);
+
+  // Add each train's data into the table
+  $("#train-table > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDestination + "</td><td>" +
+  trainTime + "</td><td>" + trainFrequency + "</td><td>" + nextArrival + "</td><td>" + minutesAway + "</td></tr>");
+});
 
 
-//calculate the time
-
-
-
-//Calculate  frequency
-
-
-
-
-// Add each train's data into the table
+// set up firebase?????????????
