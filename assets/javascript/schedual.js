@@ -18,7 +18,7 @@ $("#add-train-btn").on("click", function(event) {
 //get user input
 var trainName = $("#train-name-input").val().trim();
 var trainDestination = $("#destination-input").val().trim();
-var trainTime = moment($("#time-input").val().trim(), "HH:mm").format("X");
+var trainTime = moment($("#time-input").val().trim(), "HH:mm").format("");
 var trainFrequency = $("#frequency-input").val().trim();
 
 //object for holding data
@@ -64,22 +64,33 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
   console.log(trainTime);
   console.log(trainFrequency);
 
-  // Current Time ????????????????????
-  var currentTime = moment();
-  console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
+  
 
-  // To calculate the next arrival ????????????????
-  var nextArrival = trainTime + trainFrequency
-  console.log(nextArrival);
+    // First Time (pushed back 1 year to make sure it comes before current time)
+    var firstTimeConverted = moment(trainTime, "HH:mm").subtract(1, "years");
+    console.log(firstTimeConverted);
 
-  // Calculate Minutes Away ????????????????????????
-  var minutesAway = currentTime - nextArrival
-  console.log(minutesAway);
+    // Current Time
+    var currentTime = moment().format("HH:mm");
+    console.log("CURRENT TIME: " + currentTime);
 
+    // Difference between the times
+    var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
+    console.log("DIFFERENCE IN TIME: " + diffTime);
+
+    // Time apart (remainder)
+    var tRemainder = diffTime % trainFrequency;
+    console.log(tRemainder);
+
+    // Minute Until Train
+    var tMinutesTillTrain = trainFrequency - tRemainder;
+    console.log("MINUTES TILL TRAIN: " + tMinutesTillTrain);
+
+    // Next Train
+    var nextTrain = moment().add(tMinutesTillTrain, "minutes");
+    console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
+    
   // Add each train's data into the table
-  $("#train-table > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDestination + "</td><td>" +
-  trainTime + "</td><td>" + trainFrequency + "</td><td>" + nextArrival + "</td><td>" + minutesAway + "</td></tr>");
+  $("#train-table > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDestination + "</td><td>" + trainFrequency + "</td><td>" + nextTrain + "</td><td>" + tMinutesTillTrain + "</td></tr>");
 });
 
-
-// set up firebase?????????????
