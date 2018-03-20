@@ -89,8 +89,10 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
     // Next Train
     var nextTrain = moment().add(tMinutesTillTrain, "minutes");
     console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
+
+    var nextTrainDisplay = moment(nextTrain).format("hh:mm a");
     
   // Add each train's data into the table
-  $("#train-table > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDestination + "</td><td>" + trainFrequency + "</td><td>" + nextTrain + "</td><td>" + tMinutesTillTrain + "</td></tr>");
+  $("#train-table > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDestination + "</td><td>" + trainFrequency + "</td><td>" + nextTrainDisplay + "</td><td>" + tMinutesTillTrain + "</td></tr>");
 });
 
